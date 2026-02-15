@@ -85,7 +85,7 @@ const HomePage: React.FC = () => {
       {/* Main Content */}
       <main className="container">
         <div className="declarations-section">
-          <h2>Submitted Declarations ({declarations.length})</h2>
+          <h2>Submitted Declarations ({Object.keys(groupedDeclarations).length})</h2>
 
           {/* Loading State */}
           {loading && (
