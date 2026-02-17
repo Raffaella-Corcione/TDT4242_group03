@@ -126,19 +126,9 @@ router.post('/', upload.single('screenshot'), async (req, res) => {
     // Execute all inserts
     await Promise.all(insertPromises);
 
-    // Fetch the newly created records
-    const [newRecords] = await pool.query(
-      `SELECT * FROM ai_declarations 
-       WHERE user_name = ? AND assignment_title = ? 
-       ORDER BY created_at DESC 
-       LIMIT ?`,
-      [userName, assignmentTitle, toolsArray.length]
-    );
-
     res.status(201).json({
       success: true,
       message: `Successfully created ${toolsArray.length} declaration(s)`,
-      data: newRecords
     });
 
   } catch (error) {
