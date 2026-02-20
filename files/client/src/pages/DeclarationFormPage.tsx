@@ -47,7 +47,7 @@ const DeclarationFormPage: React.FC = () => {
   /**
    * Handle checkbox changes for AI tools
    */
-  const handleToolChange = (tool: string) => {
+  const handleToolChange = (tool: AITool) => {
     setFormData(prev => ({
       ...prev,
       aiTools: prev.aiTools.includes(tool)

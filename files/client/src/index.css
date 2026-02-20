@@ -107,10 +107,6 @@ input, textarea, select {
   padding: 0 var(--spacing-lg);
 }
 
-.text-center {
-  text-align: center;
-}
-
 .mt-1 { margin-top: var(--spacing-sm); }
 .mt-2 { margin-top: var(--spacing-md); }
 .mt-3 { margin-top: var(--spacing-lg); }

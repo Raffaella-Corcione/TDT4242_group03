@@ -21,7 +21,7 @@ export interface Declaration {
 export interface DeclarationFormData {
   userName: string;
   assignmentTitle: string;
-  aiTools: string[]; // Array of selected tools
+  aiTools: AITool[]; // Array of selected tools
   customTool: string; // Custom tool input
   usagePurpose: string;
   aiContent: string;
