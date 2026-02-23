@@ -38,10 +38,21 @@ const DeclarationFormPage: React.FC = () => {
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    
+    if (name === 'customTool') {
+      // Remove ONLY control characters and special symbols that could break things
+      // This allows: letters, numbers, punctuation, and spaces
+      const safeCharacters = value.replace(/[^\w\s.,\-'!?():;/+@#&]/g, '');
+      setFormData(prev => ({
+        ...prev,
+        [name]: safeCharacters
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   /**
@@ -116,6 +127,17 @@ const DeclarationFormPage: React.FC = () => {
       setError('Please select at least one AI tool or enter a custom tool');
       return false;
     }
+    
+    // Validate custom tool format if provided
+    if (formData.customTool.trim()) {
+      // Allow letters, numbers, punctuation, and spaces
+      const validCharactersRegex = /^[\w\s.,\-'!?():;/+@#&]+$/;
+      if (!validCharactersRegex.test(formData.customTool.trim())) {
+        setError('Custom tool name contains invalid characters');
+        return false;
+      }
+    }
+    
     if (!formData.usagePurpose.trim()) {
       setError('Please describe the purpose of AI usage');
       return false;
@@ -273,6 +295,7 @@ const DeclarationFormPage: React.FC = () => {
               <label htmlFor="customTool" className="form-label">
                 Other Tool (Optional)
               </label>
+              <p className="form-help">Only one tool allowed. Letters, numbers, punctuation, and spaces allowed with maximum length of 50 characters</p>
               <input
                 type="text"
                 id="customTool"
@@ -282,6 +305,7 @@ const DeclarationFormPage: React.FC = () => {
                 className="form-input"
                 placeholder="Enter any other AI tool not listed above"
                 disabled={loading}
+                maxLength={50}
               />
             </div>
 

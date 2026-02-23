@@ -6,6 +6,7 @@ require('dotenv').config();
 
 const { initializeDatabase } = require('./config/database');
 const declarationsRoutes = require('./routes/declarations');
+const { serverError } = require('./utils/responses');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -45,13 +46,17 @@ app.get('/api/health', (req, res) => {
 /**
  * Error handling middleware
  */
-app.use((err, req, res, next) => {
+/*app.use((err, req, res, next) => {
   console.error('Server error:', err);
   res.status(500).json({
     success: false,
     message: 'Internal server error',
     error: process.env.NODE_ENV === 'development' ? err.message : undefined
   });
+});*/
+app.use((err, req, res, next) => {
+  console.error('Server error:', err);
+  return serverError(res, 'Internal server error', err);
 });
 
 /**

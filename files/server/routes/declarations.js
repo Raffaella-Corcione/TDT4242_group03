@@ -5,6 +5,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const { pool } = require('../config/database');
+const { successResponse, validationError, serverError } = require('../utils/responses');
 
 // Ensure uploads directory exists
 const uploadDir = path.join(__dirname, '../uploads');
@@ -56,18 +57,23 @@ router.get('/', async (req, res) => {
       'SELECT * FROM ai_declarations ORDER BY created_at DESC'
     );
     
-    res.json({
+    /*res.json({
       success: true,
       count: rows.length,
       data: rows
-    });
+    });*/
+	return successResponse(res, {
+  	  count: rows.length,
+  	  data: rows
+	});
   } catch (error) {
     console.error('Error fetching declarations:', error);
-    res.status(500).json({
+    /*res.status(500).json({
       success: false,
       message: 'Failed to fetch declarations',
       error: error.message
-    });
+    });*/
+	return serverError(res, 'Failed to fetch declarations', error);
   }
 });
 
@@ -87,27 +93,42 @@ router.post('/', upload.single('screenshot'), async (req, res) => {
       if (req.file) {
         fs.unlinkSync(req.file.path);
       }
-      return res.status(400).json({
+      /*return res.status(400).json({
         success: false,
         message: 'All fields except screenshot are required'
-      });
+      });*/
+	  return validationError(res, 'All fields except screenshot are required');
     }
 
     // Parse aiTools (comes as JSON string from FormData)
     let toolsArray;
     try {
       toolsArray = JSON.parse(aiTools);
-      if (!Array.isArray(toolsArray) || toolsArray.length === 0) {
-        throw new Error('AI tools must be a non-empty array');
+      if (!Array.isArray(toolsArray) || toolsArray.length === 0 || !toolsArray.every(tool => tool.trim().length <= 50)) {
+        throw new Error('AI tools must be a non-empty array with each tool name not exceeding 50 characters');
       }
     } catch (parseError) {
       if (req.file) {
         fs.unlinkSync(req.file.path);
       }
-      return res.status(400).json({
+      /*return res.status(400).json({
         success: false,
         message: 'Invalid AI tools format'
-      });
+      });*/
+	  return validationError(res, 'Invalid AI tools format');
+    }
+
+    const validCharactersRegex = /^[\w\s.,\-'!?():;/+@#&]+$/;
+    for (const tool of toolsArray) {
+      if (!validCharactersRegex.test(tool)) {
+        if (req.file) {
+          fs.unlinkSync(req.file.path);
+        }
+        return validationError(
+          res, 
+          `Invalid tool name "${tool}". Tool names can only contain letters, numbers, punctuation, and spaces.`
+        );
+      }
     }
 
     // Get screenshot path if file was uploaded
@@ -126,10 +147,16 @@ router.post('/', upload.single('screenshot'), async (req, res) => {
     // Execute all inserts
     await Promise.all(insertPromises);
 
-    res.status(201).json({
+    /*res.status(201).json({
       success: true,
       message: `Successfully created ${toolsArray.length} declaration(s)`,
-    });
+    });*/
+	return successResponse(
+  	  res,
+ 	 {},
+  	 `Successfully created ${toolsArray.length} declaration(s)`,
+ 	 201
+	);
 
   } catch (error) {
     console.error('Error creating declaration:', error);
@@ -139,11 +166,13 @@ router.post('/', upload.single('screenshot'), async (req, res) => {
       fs.unlinkSync(req.file.path);
     }
 
-    res.status(500).json({
+    /*res.status(500).json({
       success: false,
       message: 'Failed to create declaration',
       error: error.message
-    });
+    });*/
+	return serverError(res, 'Failed to create declaration', error);
+
   }
 });
 
