@@ -282,6 +282,7 @@ const DeclarationFormPage: React.FC = () => {
                 className="form-input"
                 placeholder="Enter any other AI tool not listed above"
                 disabled={loading}
+                maxLength={50}
               />
             </div>
 

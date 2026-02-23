@@ -104,8 +104,8 @@ router.post('/', upload.single('screenshot'), async (req, res) => {
     let toolsArray;
     try {
       toolsArray = JSON.parse(aiTools);
-      if (!Array.isArray(toolsArray) || toolsArray.length === 0) {
-        throw new Error('AI tools must be a non-empty array');
+      if (!Array.isArray(toolsArray) || toolsArray.length === 0 || !toolsArray.every(tool => tool.trim().length <= 50)) {
+        throw new Error('AI tools must be a non-empty array with each tool name not exceeding 50 characters');
       }
     } catch (parseError) {
       if (req.file) {
