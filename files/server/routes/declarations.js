@@ -118,6 +118,19 @@ router.post('/', upload.single('screenshot'), async (req, res) => {
 	  return validationError(res, 'Invalid AI tools format');
     }
 
+    const validCharactersRegex = /^[\w\s.,\-'!?():;/+@#&]+$/;
+    for (const tool of toolsArray) {
+      if (!validCharactersRegex.test(tool)) {
+        if (req.file) {
+          fs.unlinkSync(req.file.path);
+        }
+        return validationError(
+          res, 
+          `Invalid tool name "${tool}". Tool names can only contain letters, numbers, punctuation, and spaces.`
+        );
+      }
+    }
+
     // Get screenshot path if file was uploaded
     const screenshotPath = req.file ? `/uploads/${req.file.filename}` : null;
 
