@@ -62,3 +62,22 @@ go into the /client/ folder and run `npm install`
 install MySQL and run the server (remember to change the password to your password in the .env file)
 
 run the application: `npm run dev`.
+
+### Tests setup
+Install dev dependencies (run inside files/):
+
+	npm i -D vitest jsdom @testing-library/react @testing-library/jest-dom @testing-library/user-event @types/testing-library__jest-dom
+
+if needed, upgrade Node to version 20 or 22.
+Install dependencies again: 
+	
+	cd files
+	npm install
+
+To run the tests: 
+
+	npm run test
+
+To run with coverage:
+	
+	npm run coverage
