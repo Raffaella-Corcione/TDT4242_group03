@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import axios from 'axios';
+import '@testing-library/jest-dom';
 
 // Mock axios so network requests don't actually run
 vi.mock('axios', () => ({
