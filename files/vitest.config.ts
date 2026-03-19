@@ -14,13 +14,13 @@ export default defineConfig({
       reporter: ['text', 'lcov', 'html'], // terminal summary, lcov file, and HTML report
       reportsDirectory: './coverage',
       all: true, // collect coverage from files even if not imported by tests
-      include: ['client/src/**/*.{ts,tsx}'], // files to include in coverage
+      include: ['client/src/**/*.{ts,tsx}', 'server/**/*.js'], // files to include in coverage
       exclude: ['**/*.d.ts', 'client/src/main.*', 'client/src/vite-env.*'],
       // Thresholds - tests will fail if coverage is below these percentages
       // Adjust numbers to suit your project policy
       statements: 60,
-      branches: 60,
-      functions: 60,
+      branches: 70,
+      functions: 80,
       lines: 60
     }
   }
