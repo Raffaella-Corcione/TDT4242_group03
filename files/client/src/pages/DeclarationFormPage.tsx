@@ -39,15 +39,13 @@ const DeclarationFormPage: React.FC = () => {
   ) => {
     const { name, value } = e.target;
     
-    if (name === 'customTool') {
-      // Remove ONLY control characters and special symbols that could break things
-      // This allows: letters, numbers, punctuation, and spaces
-      const safeCharacters = value.replace(/[^\w\s.,\-'!?():;/+@#&]/g, '');
-      setFormData(prev => ({
-        ...prev,
-        [name]: safeCharacters
-      }));
-    } else {
+    
+  if (name === 'customTool') {
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  } else {
       setFormData(prev => ({
         ...prev,
         [name]: value
